@@ -21,7 +21,7 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:3000/change-password
-Content-Type: application/application/json
+Content-Type: application/json
 
 {
   "username": "adam_richard",
