@@ -30,23 +30,23 @@ initializeDBAndServer();
 
 app.post("/register", async (request, response) => {
   const { username, name, password, gender, location } = request.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(request.body.password, 10);
   const getUser = `SELECT * FROM user WHERE username='${username}'`;
   const userData = await db.get(getUser);
 
   if (userData === undefined) {
-    const createUserQuery = `
-      INSERT INTO 
-      user(username,name,password,gender,location)
-      VALUES('${username}','${name}','${hashedPassword}','${gender}','${location}');
-      `;
-    const dbResponse = await db.run(createUserQuery);
-    const newUserId = dbResponse.lastID;
     const passwordLength = password.length;
     if (passwordLength < 5) {
       response.status(400);
       response.send("Password is too short");
     } else {
+      const createUserQuery = `
+      INSERT INTO 
+      user(username,name,password,gender,location)
+      VALUES('${username}','${name}','${hashedPassword}','${gender}','${location}');
+      `;
+      const dbResponse = await db.run(createUserQuery);
+      const newUserId = dbResponse.lastID;
       response.status(200);
       response.send("User created successfully");
     }
